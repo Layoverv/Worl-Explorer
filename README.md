@@ -49,9 +49,15 @@ Worl-Explorer/
 │   ├── app.js          # Lógica principal de la aplicación
 │   ├── eventos.js      # Manejo de eventos del DOM
 │   └── flag3d.js       # Renderizado 3D de banderas con Three.js
-├── libs/               # Librerías locales
-└── three.js            # Motor 3D (r128)
+├── libs/
+│   └── three.module.min.js  # Copia local de Three.js (actualmente no se usa)
+└── three.js            # Referencia de submódulo sin configurar (aparece vacía al clonar)
 ```
+
+> ℹ️ **Three.js se carga desde CDN.** `index.html` incluye Three.js r128 desde
+> `https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js`, por lo que
+> se necesita conexión a internet. Ni la carpeta `three.js/` ni `libs/` son necesarias
+> para ejecutar el proyecto.
 
 ---
 
