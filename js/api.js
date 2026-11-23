@@ -8,6 +8,26 @@
 const API_BASE = 'https://restcountries.com/v3.1';
 
 /**
+ * Comprueba que la API devolvió una lista de países.
+ * Si la respuesta es un objeto de error (por ejemplo, el aviso de versión
+ * deprecada que REST Countries devuelve con estado 200), lanza un Error con
+ * el mensaje de la API en lugar de dejar que falle .sort() o .forEach().
+ *
+ * @param {*} datos - JSON ya parseado de la respuesta
+ * @returns {Array} El mismo array si es válido
+ */
+function validarListaPaises(datos) {
+  if (Array.isArray(datos)) {
+    return datos;
+  }
+
+  const mensajeApi = datos && Array.isArray(datos.errors) && datos.errors[0] && datos.errors[0].message;
+  throw new Error(mensajeApi
+    ? `La API de países respondió con un error: ${mensajeApi}`
+    : 'La API de países devolvió una respuesta inesperada.');
+}
+
+/**
  * Busca países por nombre usando async/await.
  * Demuestra: fetch + async/await + manejo de errores con try/catch.
  *
@@ -26,7 +46,7 @@ async function buscarPaisesPorNombre(nombre) {
   }
 
   const datos = await response.json();
-  return datos;
+  return validarListaPaises(datos);
 }
 
 /**
@@ -46,6 +66,7 @@ function buscarPaisesPorRegion(region) {
       }
       return response.json();
     })
+    .then(validarListaPaises)
     .catch(function(error) {
       // Re-lanza el error para que el caller lo maneje
       throw new Error(`No se pudo cargar la región "${region}": ${error.message}`);
@@ -67,7 +88,7 @@ async function obtenerPaisesDestacados() {
       throw new Error(`No se pudo cargar la información inicial: ${response.status}`);
     }
 
-    const paises = await response.json();
+    const paises = validarListaPaises(await response.json());
 
     // Ordena por población descendente y retorna los primeros 8
     return paises
