@@ -586,7 +586,7 @@ async function inicializarApp() {
       'success'
     );
   } catch (error) {
-    mostrarEstadoBusqueda('No se pudo conectar con la API. Verifica tu conexión.', 'error');
+    mostrarEstadoBusqueda(error.message || 'No se pudo conectar con la API. Verifica tu conexión.', 'error');
     document.getElementById('resultsGrid').innerHTML = `
       <div class="results-grid__empty">
         <div>
